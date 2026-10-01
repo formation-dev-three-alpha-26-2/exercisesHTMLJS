@@ -93,7 +93,7 @@ button.addEventListener("click", () => {
   };
 
   todos.push(newtodo);
-  inputvalue = "";
+  input.value = "";
   localStorage.setItem("todos", JSON.stringify(todos));
 
   affichertodos();
