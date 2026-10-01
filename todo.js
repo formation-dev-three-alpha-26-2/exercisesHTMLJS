@@ -1,43 +1,31 @@
-
-
-
-
 const listOl = document.getElementById("list");
 const button = document.getElementById("button");
 const input = document.getElementById("newtodo");
+const searchinput = document.getElementById("search");
+const clear = document.getElementById("clear");
+const buttonDate = document.getElementById("sort");
 
+let todos = [];
 
-
-let todos = []
-
-if ( JSON.parse(localStorage.getItem("todos")) ) {
-  todos = JSON.parse(localStorage.getItem("todos"))
-} 
-else {
-todos = []
+if (JSON.parse(localStorage.getItem("todos"))) {
+  todos = JSON.parse(localStorage.getItem("todos"));
+} else {
+  todos = [];
 }
-
-
 
 // ou bien haka short way : const todos = JSON.parse(localStorage.getItem("todos")) || []
 
-
-
-
-
-// JSON.stringify tconverti données ml etat initiale lel chaine 
-// JSON.parse   tconverti ml chaine lel etat initale 
+// JSON.stringify tconverti données ml etat initiale lel chaine
+// JSON.parse   tconverti ml chaine lel etat initale
 // localstorage.getitem  tjiblna données qui été sauvegardé fl storage mtaa navigateur
-//localstorage.setitem tsauvegardilna données fl storage mtaa naviagteur 
+//localstorage.setitem tsauvegardilna données fl storage mtaa naviagteur
 
-
-let counter = todos.length
+let counter = todos.length;
 
 const genererId = () => {
   counter++;
   return counter;
 };
-
 
 const affichertodos = () => {
   listOl.innerHTML = "";
@@ -50,36 +38,17 @@ const affichertodos = () => {
     editbutton.textContent = "edit";
     todo.textContent = el.value;
 
-
-
-
-
-
-
-
-if (el.completed === true ) {
-     todo.style.textDecoration = "line-through";
+    if (el.completed === true) {
+      todo.style.textDecoration = "line-through";
       todo.style.opacity = "0.6";
-}
+    }
 
+    todo.addEventListener("click", () => {
+      el.completed = !el.completed;
 
-
-
-todo.addEventListener("click", () => {
-      el.completed = !el.completed
-   
-      localStorage.setItem("todos" , JSON.stringify(todos))
-     affichertodos()
+      localStorage.setItem("todos", JSON.stringify(todos));
+      affichertodos();
     });
-
-
-
-
-
-
-
-
-
 
     editbutton.addEventListener("click", () => {
       console.log(el.value);
@@ -89,11 +58,10 @@ todo.addEventListener("click", () => {
       let editinput = document.getElementById("editinput");
 
       editinput.addEventListener("keydown", (event) => {
-    if ( event.key === "Enter") {
-      // lcondition hedhi bech mnkhaliwch lfunction mtaa ledit tekhdm alla ay key nkhaliwha tekhdm kn maa lentrée bech enty tnjm tediti w tapi nrml fl clavvier
-      edit(el.id, editinput.value);
-
-  }
+        if (event.key === "Enter") {
+          // lcondition hedhi bech mnkhaliwch lfunction mtaa ledit tekhdm alla ay key nkhaliwha tekhdm kn maa lentrée bech enty tnjm tediti w tapi nrml fl clavvier
+          edit(el.id, editinput.value);
+        }
       });
     });
 
@@ -107,10 +75,15 @@ todo.addEventListener("click", () => {
 
 affichertodos();
 
+
+
+
+
+
 button.addEventListener("click", () => {
   let inputvalue = input.value;
 
-console.log(inputvalue);
+  console.log(inputvalue);
 
   let newtodo = {
     id: genererId(),
@@ -120,32 +93,35 @@ console.log(inputvalue);
   };
 
   todos.push(newtodo);
-  inputvalue = ""
-localStorage.setItem("todos" , JSON.stringify(todos))
+  inputvalue = "";
+  localStorage.setItem("todos", JSON.stringify(todos));
 
   affichertodos();
   nombreDetache();
 });
 
+
+
 const deleteF = (id) => {
   todos = todos.filter((el) => {
     return el.id !== id;
   });
-localStorage.setItem("todos" , JSON.stringify(todos))
+  localStorage.setItem("todos", JSON.stringify(todos));
 
   affichertodos();
   nombreDetache();
 };
 
+
+
+
+
 const edit = (id, valeur) => {
-
-
   todos = todos.map((el) => {
     if (el.id === id) {
       console.log(el);
-      
-      return (
-        el = {
+
+      return (el = {
         ...el,
         value: valeur,
       });
@@ -154,10 +130,11 @@ const edit = (id, valeur) => {
   });
 
   console.log(todos);
-  localStorage.setItem("todos" , JSON.stringify(todos))
+  localStorage.setItem("todos", JSON.stringify(todos));
 
-  affichertodos()
+  affichertodos();
 };
+
 
 
 
@@ -170,13 +147,16 @@ const nombreDetache = () => {
 
 nombreDetache();
 
-const clear = document.getElementById("clear");
+
+
+
+
 
 clear.addEventListener("click", () => {
   todos = [];
 
   listOl.innerHTML = "";
-    localStorage.setItem("todos" , JSON.stringify(todos))
+  localStorage.setItem("todos", JSON.stringify(todos));
 
   nombreDetache();
 });
@@ -184,33 +164,23 @@ clear.addEventListener("click", () => {
 
 
 
-const buttonDate = document.getElementById("sort")
+buttonDate.addEventListener("click", () => {
+  todos = todos.sort((a, b) => new Date(b.date) - new Date(a.date));
+  localStorage.setItem("todos", JSON.stringify(todos));
 
-buttonDate.addEventListener("click" , () => {
-
-
-todos = todos.sort((a, b) => new Date (b.date) - new Date (a.date))
- localStorage.setItem("todos" , JSON.stringify(todos))
-
-affichertodos()
-
-
-})
+  affichertodos();
+});
 
 
 
-const searchinput = document.getElementById("search")
 
 
-searchinput.addEventListener("input" , (event) => {
-console.log(event.target.value , "event");
-let searchdata = JSON.parse(localStorage.getItem("todos"))
-todos = searchdata.filter((el)=> {
-return el.value.includes(event.target.value)
+searchinput.addEventListener("input", (event) => {
+  console.log(event.target.value, "event");
+  let searchdata = JSON.parse(localStorage.getItem("todos"));
+  todos = searchdata.filter((el) => {
+    return el.value.includes(event.target.value);
+  });
 
-
-})
-
-affichertodos()
-
-})
+  affichertodos();
+});
